@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app_for_learn_widgets1/model/MyModel.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:http/http.dart' as http;
 
 class MainPageBloc {
   final BehaviorSubject<String> statePageSubjects = BehaviorSubject<String>.seeded("current value: 0"); // объект типа String, на который можно подписаться в Стриме
@@ -7,6 +12,23 @@ class MainPageBloc {
   // BoxDecor d = BoxDecor(Colors.blue, ,"s" )
 
   Stream<String> observeStatePage() => statePageSubjects;
+
+
+  final url = Uri.parse('https://jsonplaceholder.typicode.com/todos/1');
+
+  Future<MyModel> fetchData() async{
+    final response = await http
+        .get(url);
+
+    try{
+      return MyModel.fromJson(jsonDecode(response.body));
+    }
+    catch (_){
+      throw Exception("Failed to load data");
+    }
+  }
+
+
 
   int count = 0;
 
