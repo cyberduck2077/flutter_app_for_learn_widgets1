@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_for_learn_widgets1/blocs/generated_bloc.dart';
 import 'package:flutter_app_for_learn_widgets1/blocs/main_page_bloc.dart';
 import 'package:flutter_app_for_learn_widgets1/blocs/user_bloc/user_bloc.dart';
+import 'package:flutter_app_for_learn_widgets1/pages/second_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +58,17 @@ class _MainPageState extends State<MainPage> {
                     ),
                     // InputTextWidget(),
                     ButtonNextState(),
+                    Align(
+                      alignment: AlignmentDirectional.topEnd,
+                      child: IconButton(
+                          onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SecondPage(),
+                                ),
+                              ),
+                          icon: Icon(Icons.next_plan)),
+                    ),
                   ],
                 ),
               ),
