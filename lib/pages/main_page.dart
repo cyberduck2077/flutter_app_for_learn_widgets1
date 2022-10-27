@@ -148,12 +148,32 @@ class UserBlocWidget extends StatelessWidget {
     return BlocBuilder<UserBloc, UserState>(
       // bloc: UserBloc(),
       builder: (context, state) {
+        final users = state.users;
+        final job = state.job;
         return Column(
           children: [
-            if (state is UserLoadingState) CircularProgressIndicator(),
-            if (state is UserLoadedState)
-              ...state.users.map(
-                  (e) => Text(e.name, style: TextStyle(color: Colors.green))),
+            if (state.isLoading) CircularProgressIndicator(),
+            if (users.isNotEmpty)
+              Column(
+                children: [
+                  Text("User State:"),
+                  ...users.map((e) =>
+                      Text(e.name, style: TextStyle(color: Colors.green))),
+                ],
+              ),
+            const SizedBox(
+              height: 10,
+              width: double.infinity,
+            ),
+            if (job.isNotEmpty)
+              Column(
+                children: [
+                  const Text("Added Job: "),
+                  ...job.map((e) =>
+                      Text(e.name, style: TextStyle(color: Colors.green))),
+
+                ],
+              ),
           ],
         );
       },
@@ -170,6 +190,10 @@ class ButtonNextState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Container(
+            height: 1,
+            color: Colors.black12,
+          ),
           TextButton(
             onPressed: () {
               mainPageBloc.getTextFromServer();
@@ -196,6 +220,17 @@ class ButtonNextState extends StatelessWidget {
             },
             child: Text(
               "Next User State".toUpperCase(),
+              style: TextStyle(fontSize: 16, color: Colors.green),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final count = BlocProvider.of<GeneratedBloc>(context).state;
+              BlocProvider.of<UserBloc>(context)
+                  .add(UserGetUsersJobEvent(count));
+            },
+            child: Text(
+              "Add job to User State".toUpperCase(),
               style: TextStyle(fontSize: 16, color: Colors.green),
             ),
           ),

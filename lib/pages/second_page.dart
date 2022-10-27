@@ -18,7 +18,7 @@ class _SecondPageState extends State<SecondPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
-              child: Text("second widget"),
+              child: Text("second page".toUpperCase()),
             ),
           ],
         ),
