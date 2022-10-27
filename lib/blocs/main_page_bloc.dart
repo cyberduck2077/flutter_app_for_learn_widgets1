@@ -7,48 +7,55 @@ import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 
 class MainPageBloc {
-  final BehaviorSubject<String> statePageSubjects = BehaviorSubject<String>.seeded("current value: 0"); // объект типа String, на который можно подписаться в Стриме
+  final BehaviorSubject<String> statePageSubjects = BehaviorSubject<
+          String>.seeded(
+      "current value: 0"); // объект типа String, на который можно подписаться в Стриме
+  final BehaviorSubject<String> stateDataFromServer = BehaviorSubject<
+          String>.seeded(
+      "no data"); // объект типа String, на который можно подписаться в Стриме
 
   // BoxDecor d = BoxDecor(Colors.blue, ,"s" )
 
   Stream<String> observeStatePage() => statePageSubjects;
 
+  Stream<String> observeDataFromServer() => stateDataFromServer;
+
+  // String textFromServer = "Data from Server: ";
 
   final url = Uri.parse('https://jsonplaceholder.typicode.com/todos/1');
 
-  Future<MyModel> fetchData() async{
-    final response = await http
-        .get(url);
+  Future<MyModel> fetchData() async {
+    final response = await http.get(url);
 
-    try{
+    try {
       return MyModel.fromJson(jsonDecode(response.body));
-    }
-    catch (_){
+    } catch (_) {
       throw Exception("Failed to load data");
     }
   }
 
-
+  void getTextFromServer() {
+    fetchData().then((value) {
+      stateDataFromServer.sink.add("Data from Server: ${value.title}");
+    });
+  }
 
   int count = 0;
 
   void changeState() {
     count++;
     statePageSubjects.sink.add("new value: $count");
-
   }
 
-  void resetState(){
-    count=0;
+  void resetState() {
+    count = 0;
     statePageSubjects.sink.add("new value: 0");
   }
 
-  void dispose(){
+  void dispose() {
     statePageSubjects.close();
   }
 }
-
-
 
 enum StateScreen { start, wait, stop }
 
