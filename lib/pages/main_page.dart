@@ -29,11 +29,11 @@ class _MainPageState extends State<MainPage> {
             create: (context) => UserBloc(),
           ),
         ],
-        child: BlocBuilder<GeneratedBloc, int>(
-          builder: (context, state) {
+        child: Builder(
+          builder: (context) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
-                onPressed: () => BlocProvider.of<GeneratedBloc>(context)
+                onPressed: () => context.read<GeneratedBloc>()
                     .add(CounterDecEvent()),
                 child: Icon(Icons.exposure_minus_1),
               ),
@@ -145,19 +145,22 @@ class UserBlocWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
+    return Builder(
       // bloc: UserBloc(),
-      builder: (context, state) {
-        final users = state.users;
-        final job = state.job;
+      builder: (context) {
+        final userState = context.select((UserBloc bloc) => bloc.state.users);
+        final jobState = context.select((UserBloc bloc) => bloc.state.job);
+        final loadingState = context.watch<UserBloc>().state.isLoading;
+        // final users = state.users;
+        // final job = state.job;
         return Column(
           children: [
-            if (state.isLoading) CircularProgressIndicator(),
-            if (users.isNotEmpty)
+            if (loadingState) CircularProgressIndicator(),
+            if (userState.isNotEmpty)
               Column(
                 children: [
                   Text("User State:"),
-                  ...users.map((e) =>
+                  ...userState.map((e) =>
                       Text(e.name, style: TextStyle(color: Colors.green))),
                 ],
               ),
@@ -165,11 +168,11 @@ class UserBlocWidget extends StatelessWidget {
               height: 10,
               width: double.infinity,
             ),
-            if (job.isNotEmpty)
+            if (jobState.isNotEmpty)
               Column(
                 children: [
                   const Text("Added Job: "),
-                  ...job.map((e) =>
+                  ...jobState.map((e) =>
                       Text(e.name, style: TextStyle(color: Colors.green))),
 
                 ],
