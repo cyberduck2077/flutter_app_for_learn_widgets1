@@ -18,15 +18,16 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final generatedBloc = GeneratedBloc();
     return Provider.value(
       value: blocMainPage,
       child: MultiBlocProvider(
         providers: [
           BlocProvider<GeneratedBloc>(
-            create: (context) => GeneratedBloc(),
+            create: (context) => generatedBloc,
           ),
           BlocProvider<UserBloc>(
-            create: (context) => UserBloc(),
+            create: (context) => UserBloc(generatedBloc),
           ),
         ],
         child: Builder(

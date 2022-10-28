@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_app_for_learn_widgets1/blocs/generated_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'user_event.dart';
@@ -8,10 +9,29 @@ part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
-  UserBloc() : super(UserState()) {
+  final GeneratedBloc generatedBloc;
+  late final StreamSubscription generatedBlocSubscription;
+
+
+  UserBloc(this.generatedBloc) : super(UserState()) {
     on<UserGetUsersEvent>(_onGetUser);
     on<UserGetUsersJobEvent>(_onGetUserJob);
+
+    generatedBlocSubscription = generatedBloc.stream.listen((state) {
+      if(state<=0){
+        add(UserGetUsersEvent(0));
+        add(UserGetUsersJobEvent(0));
+      }
+    });
   }
+
+  @override
+  Future<void> close()async{
+    generatedBlocSubscription.cancel();
+    return super.close();
+  }
+
+
 
   //обработка события (UserGetUsersEvent) и изменение состояния (UserState)
   _onGetUser(UserGetUsersEvent event, Emitter<UserState> emit) async {
