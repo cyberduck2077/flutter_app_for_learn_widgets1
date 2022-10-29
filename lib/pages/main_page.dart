@@ -139,16 +139,24 @@ class UserBlocWidget extends StatelessWidget {
       builder: (context) {
         final userState = context.select((UserBloc bloc) => bloc.state.users);
         final loadingState = context.watch<UserBloc>().state.isLoading;
-        if (loadingState)
-        return CircularProgressIndicator();
+        if (loadingState) return CircularProgressIndicator();
         return SizedBox(
           height: 100,
           child: ListView(
             shrinkWrap: true,
             children: [
-              if (userState.isNotEmpty) Text("User State:",textAlign: TextAlign.center,),
-              ...userState.map(
-                  (e) => Text(e.name, style: TextStyle(color: Colors.green, ),textAlign: TextAlign.center,)),
+              if (userState.isNotEmpty)
+                Text(
+                  "User State:",
+                  textAlign: TextAlign.center,
+                ),
+              ...userState.map((e) => Text(
+                    e.name,
+                    style: TextStyle(
+                      color: Colors.green,
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
             ],
           ),
         );
@@ -180,13 +188,27 @@ class ButtonNextState extends StatelessWidget {
                   TextStyle(fontSize: 16, color: Colors.greenAccent.shade200),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              BlocProvider.of<GeneratedBloc>(context).add(CounterIncEvent());
+          BlocListener<GeneratedBloc, int>(
+            listenWhen: (prev, current) => prev>current,//условия прослушивания state
+            listener: (context, state) {
+              if(state == 0){
+                Scaffold.of(context).showBottomSheet((context) => Container(
+                  color: Colors.red,
+                  width: double.infinity,
+                  height: 30,
+                  child: Text("state is 0"),
+                ));
+              }
             },
-            child: Text(
-              "Next Generated State".toUpperCase(),
-              style: TextStyle(fontSize: 16, color: Colors.blueAccent.shade400),
+            child: TextButton(
+              onPressed: () {
+                BlocProvider.of<GeneratedBloc>(context).add(CounterIncEvent());
+              },
+              child: Text(
+                "Next Generated State".toUpperCase(),
+                style:
+                    TextStyle(fontSize: 16, color: Colors.blueAccent.shade400),
+              ),
             ),
           ),
           TextButton(
