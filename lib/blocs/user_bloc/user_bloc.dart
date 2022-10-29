@@ -9,15 +9,16 @@ part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
+
   final GeneratedBloc generatedBloc;
-  late final StreamSubscription generatedBlocSubscription;
+  late final StreamSubscription generatedBlocSubscription;//подписка на изменение состояния (state)
 
 
   UserBloc(this.generatedBloc) : super(UserState()) {
     on<UserGetUsersEvent>(_onGetUser);
     on<UserGetUsersJobEvent>(_onGetUserJob);
 
-    generatedBlocSubscription = generatedBloc.stream.listen((state) {
+    generatedBlocSubscription = generatedBloc.stream.listen((state) {//реаширует на изменение состояния
       if(state<=0){
         add(UserGetUsersEvent(0));
         add(UserGetUsersJobEvent(0));

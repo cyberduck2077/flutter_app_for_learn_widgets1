@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_for_learn_widgets1/blocs/generated_bloc.dart';
+import 'package:flutter_app_for_learn_widgets1/blocs/user_bloc/user_bloc.dart';
 import 'package:flutter_app_for_learn_widgets1/pages/main_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,22 +13,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyHomePage(),
+    final generatedBloc = GeneratedBloc();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GeneratedBloc>(
+          create: (context) => generatedBloc,
+        ),
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc(generatedBloc),
+        ),
+      ],
+      child: MaterialApp(
+        home: MainPage(),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return MainPage();
-  }
-}

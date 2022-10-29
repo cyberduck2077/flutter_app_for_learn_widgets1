@@ -10,7 +10,7 @@ class MainPageBloc {
   final BehaviorSubject<String> statePageSubjects = BehaviorSubject<
           String>.seeded(
       "current value: 0"); // объект типа String, на который можно подписаться в Стриме
-  final BehaviorSubject<String> stateDataFromServer = BehaviorSubject<
+  final BehaviorSubject<String> stateDataFromServerSubject = BehaviorSubject<
           String>.seeded(
       "no data"); // объект типа String, на который можно подписаться в Стриме
 
@@ -18,7 +18,7 @@ class MainPageBloc {
 
   Stream<String> observeStatePage() => statePageSubjects;
 
-  Stream<String> observeDataFromServer() => stateDataFromServer;
+  Stream<String> observeDataFromServer() => stateDataFromServerSubject;
 
   // String textFromServer = "Data from Server: ";
 
@@ -36,7 +36,7 @@ class MainPageBloc {
 
   void getTextFromServer() {
     fetchData().then((value) {
-      stateDataFromServer.sink.add("Data from Server: ${value.title}");
+      stateDataFromServerSubject.sink.add("Data from Server: ${value.title}");
     });
   }
 
@@ -54,6 +54,7 @@ class MainPageBloc {
 
   void dispose() {
     statePageSubjects.close();
+    stateDataFromServerSubject.close();
   }
 }
 

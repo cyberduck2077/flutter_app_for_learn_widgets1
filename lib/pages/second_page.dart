@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_for_learn_widgets1/blocs/user_bloc/user_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SecondPage extends StatefulWidget {
   const SecondPage({Key? key}) : super(key: key);
@@ -14,13 +16,18 @@ class _SecondPageState extends State<SecondPage> {
       minimum: EdgeInsets.all(8.0),
       child: Scaffold(
         appBar: AppBar(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Text("second page".toUpperCase()),
-            ),
-          ],
+        body: Center(
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              final jobState = state.job;
+              return Column(
+                children: [
+                  if (state.isLoading) CircularProgressIndicator(),
+                  if (jobState.isNotEmpty) ...jobState.map((e) => Text(e.name)),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
